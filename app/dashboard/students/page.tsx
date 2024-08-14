@@ -1,203 +1,330 @@
 "use client"
-
-import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
+import { ChevronDownIcon, EyeIcon, FilePenIcon, TrashIcon } from "lucide-react"
+import Header from "../_components/header"
+import { useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
-import { Plus, Upload } from "lucide-react"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuCheckboxItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 
 export default function Component() {
-  const [departmentName, setDepartmentName] = useState("")
-  const [academicYear, setAcademicYear] = useState(0)
-  const [graduationType, setGraduationType] = useState("UG")
-  const [year, setYear] = useState("FY")
-  const [showDialog, setShowDialog] = useState(false)
-  const [showUploadDialog, setShowUploadDialog] = useState(false)
-  const [rollNo, setRollNo] = useState("")
-  const [name, setName] = useState("")
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
-  const [mobileNo, setMobileNo] = useState("")
-  const [file, setFile] = useState(null)
-  const handleCreateData = () => {
-    setShowDialog(true)
-  }
-  const handleSaveData = () => {
-    console.log("Saving student data:", {
-      rollNo,
-      name,
-      email,
-      password,
-      mobileNo,
-    })
-    setShowDialog(false)
-  }
-  const handleFetchData = () => {
-    console.log("Fetching data")
-  }
-  const handleUploadData = () => {
-    setShowUploadDialog(true)
-  }
-  const handleFileChange = (e:any) => {
-    setFile(e.target.files[0])
-  }
-  const handleUploadSubmit = () => {
-    console.log("Uploading file:", file)
-    setShowUploadDialog(false)
-  }
+  const router = useRouter()
+
   return (
     <div className="flex flex-col">
+      <Header title="Students"/>
       <main className="flex-1 p-4 md:p-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <Card className="border-none outline-none shadow-none">
-            <CardHeader className="flex items-center flex-row justify-between">
-              <CardTitle className="text-3xl">Add Student</CardTitle>
-              <div className="flex justify-center items-center">
-                <Button onClick={handleFetchData} className="mr-2" variant="outline">Fetch Data</Button>
-                <Button onClick={handleUploadData} className="mr-2" variant="outline"><Upload className="w-4 h-4"/></Button>
-                <Button onClick={handleCreateData} variant="outline"><Plus className="w-4 h-4"/></Button>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <form className="grid gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="departmentName">Department Name</Label>
-                  <Select value={departmentName} onValueChange={setDepartmentName}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select department" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="computer-science">Computer Science</SelectItem>
-                      <SelectItem value="data-science">Data Science</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="academicYear">Academic Year</Label>
-                  <Select
-                    value={academicYear.toString()}
-                    onValueChange={(value) => setAcademicYear(parseInt(value))}
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select academic year" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="2324">2023-24</SelectItem>
-                      <SelectItem value="2425">2024-25</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="year">Year</Label>
-                  <Select value={year} onValueChange={setYear}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select year" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="FY">FY</SelectItem>
-                      <SelectItem value="SY">SY</SelectItem>
-                      <SelectItem value="TY">TY</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="graduationType">Graduation Type</Label>
-                  <Select value={graduationType} onValueChange={setGraduationType}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select graduation type" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="UG">UG</SelectItem>
-                      <SelectItem value="PG">PG</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <Button className="w-full">Submit</Button>
-              </form>
-            </CardContent>
-          </Card>
+        <div className="flex p-4 flex-row justify-between items-center">
+          <div className="font-bold text-3xl">Students</div>
+          <div className="">
+            <Button onClick={()=>{router.push("/dashboard/students/addstudents")}} variant="secondary">Add Students</Button>
+          </div>
         </div>
+        <div className="w-full" >
+          <div className="flex justify-between items-center py-4 pr-4">
+            <Input 
+              placeholder="Filter emails..."
+              className="max-w-sm"
+            />
+            <div className="flex flex-row">
+              <div className="ml-2">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="ml-auto">
+                      Year <ChevronDownIcon className="ml-2 h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuCheckboxItem checked>2022-2023</DropdownMenuCheckboxItem>
+                    <DropdownMenuCheckboxItem checked>2023-2024</DropdownMenuCheckboxItem>
+                    <DropdownMenuCheckboxItem checked>2024-2025</DropdownMenuCheckboxItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              <div className="ml-2">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="ml-auto">
+                      Department <ChevronDownIcon className="ml-2 h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuCheckboxItem checked>Computer Science</DropdownMenuCheckboxItem>
+                    <DropdownMenuCheckboxItem checked>Data Science</DropdownMenuCheckboxItem>
+                    <DropdownMenuCheckboxItem checked>IT</DropdownMenuCheckboxItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+          </div>
+        </div>
+        <Card>
+          <CardContent className="p-4">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>ID</TableHead>
+                  <TableHead>Name</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Mobile</TableHead>
+                  <TableHead>Password</TableHead>
+                  <TableHead>Department</TableHead>
+                  <TableHead>Created</TableHead>
+                  <TableHead>Modified</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                <TableRow>
+                  <TableCell>1</TableCell>
+                  <TableCell>John Doe</TableCell>
+                  <TableCell>john@example.com</TableCell>
+                  <TableCell>123-456-7890</TableCell>
+                  <TableCell>
+                    <div className="flex items-center">
+                      <span className="mr-2">********</span>
+                      <Button variant="ghost" size="icon">
+                        <EyeIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                  <TableCell>Computer Science</TableCell>
+                  <TableCell>2023-04-01 10:00 AM</TableCell>
+                  <TableCell>2023-05-15 03:30 PM</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Button variant="ghost" size="icon">
+                        <FilePenIcon className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon">
+                        <TrashIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>2</TableCell>
+                  <TableCell>Jane Smith</TableCell>
+                  <TableCell>jane@example.com</TableCell>
+                  <TableCell>987-654-3210</TableCell>
+                  <TableCell>
+                    <div className="flex items-center">
+                      <span className="mr-2">********</span>
+                      <Button variant="ghost" size="icon">
+                        <EyeIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                  <TableCell>Sales</TableCell>
+                  <TableCell>2023-06-01 09:15 AM</TableCell>
+                  <TableCell>2023-07-10 11:45 AM</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Button variant="ghost" size="icon">
+                        <FilePenIcon className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon">
+                        <TrashIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>3</TableCell>
+                  <TableCell>Michael Johnson</TableCell>
+                  <TableCell>michael@example.com</TableCell>
+                  <TableCell>555-123-4567</TableCell>
+                  <TableCell>
+                    <div className="flex items-center">
+                      <span className="mr-2">********</span>
+                      <Button variant="ghost" size="icon">
+                        <EyeIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                  <TableCell>IT</TableCell>
+                  <TableCell>2023-08-01 02:00 PM</TableCell>
+                  <TableCell>2023-09-20 09:00 AM</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Button variant="ghost" size="icon">
+                        <FilePenIcon className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon">
+                        <TrashIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>4</TableCell>
+                  <TableCell>Emily Davis</TableCell>
+                  <TableCell>emily@example.com</TableCell>
+                  <TableCell>111-222-3333</TableCell>
+                  <TableCell>
+                    <div className="flex items-center">
+                      <span className="mr-2">********</span>
+                      <Button variant="ghost" size="icon">
+                        <EyeIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                  <TableCell>HR</TableCell>
+                  <TableCell>2023-10-01 11:30 AM</TableCell>
+                  <TableCell>2023-11-15 04:45 PM</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Button variant="ghost" size="icon">
+                        <FilePenIcon className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon">
+                        <TrashIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>4</TableCell>
+                  <TableCell>Emily Davis</TableCell>
+                  <TableCell>emily@example.com</TableCell>
+                  <TableCell>111-222-3333</TableCell>
+                  <TableCell>
+                    <div className="flex items-center">
+                      <span className="mr-2">********</span>
+                      <Button variant="ghost" size="icon">
+                        <EyeIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                  <TableCell>HR</TableCell>
+                  <TableCell>2023-10-01 11:30 AM</TableCell>
+                  <TableCell>2023-11-15 04:45 PM</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Button variant="ghost" size="icon">
+                        <FilePenIcon className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon">
+                        <TrashIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>4</TableCell>
+                  <TableCell>Emily Davis</TableCell>
+                  <TableCell>emily@example.com</TableCell>
+                  <TableCell>111-222-3333</TableCell>
+                  <TableCell>
+                    <div className="flex items-center">
+                      <span className="mr-2">********</span>
+                      <Button variant="ghost" size="icon">
+                        <EyeIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                  <TableCell>HR</TableCell>
+                  <TableCell>2023-10-01 11:30 AM</TableCell>
+                  <TableCell>2023-11-15 04:45 PM</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Button variant="ghost" size="icon">
+                        <FilePenIcon className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon">
+                        <TrashIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>4</TableCell>
+                  <TableCell>Emily Davis</TableCell>
+                  <TableCell>emily@example.com</TableCell>
+                  <TableCell>111-222-3333</TableCell>
+                  <TableCell>
+                    <div className="flex items-center">
+                      <span className="mr-2">********</span>
+                      <Button variant="ghost" size="icon">
+                        <EyeIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                  <TableCell>HR</TableCell>
+                  <TableCell>2023-10-01 11:30 AM</TableCell>
+                  <TableCell>2023-11-15 04:45 PM</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Button variant="ghost" size="icon">
+                        <FilePenIcon className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon">
+                        <TrashIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>4</TableCell>
+                  <TableCell>Emily Davis</TableCell>
+                  <TableCell>emily@example.com</TableCell>
+                  <TableCell>111-222-3333</TableCell>
+                  <TableCell>
+                    <div className="flex items-center">
+                      <span className="mr-2">********</span>
+                      <Button variant="ghost" size="icon">
+                        <EyeIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                  <TableCell>HR</TableCell>
+                  <TableCell>2023-10-01 11:30 AM</TableCell>
+                  <TableCell>2023-11-15 04:45 PM</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Button variant="ghost" size="icon">
+                        <FilePenIcon className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon">
+                        <TrashIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell>4</TableCell>
+                  <TableCell>Emily Davis</TableCell>
+                  <TableCell>emily@example.com</TableCell>
+                  <TableCell>111-222-3333</TableCell>
+                  <TableCell>
+                    <div className="flex items-center">
+                      <span className="mr-2">********</span>
+                      <Button variant="ghost" size="icon">
+                        <EyeIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                  <TableCell>HR</TableCell>
+                  <TableCell>2023-10-01 11:30 AM</TableCell>
+                  <TableCell>2023-11-15 04:45 PM</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2">
+                      <Button variant="ghost" size="icon">
+                        <FilePenIcon className="h-4 w-4" />
+                      </Button>
+                      <Button variant="ghost" size="icon">
+                        <TrashIcon className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
+          </CardContent>
+        </Card>
       </main>
-      <Dialog open={showDialog} onOpenChange={setShowDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Add New Student</DialogTitle>
-            <DialogDescription>Enter the student's details to create a new record.</DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="rollNo">Roll No.</Label>
-              <Input
-                id="rollNo"
-                placeholder="Enter roll number"
-                value={rollNo}
-                onChange={(e) => setRollNo(e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" placeholder="Enter name" value={name} onChange={(e) => setName(e.target.value)} />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="Enter email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                placeholder="Enter password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="mobileNo">Mobile No.</Label>
-              <Input
-                id="mobileNo"
-                placeholder="Enter mobile number"
-                value={mobileNo}
-                onChange={(e) => setMobileNo(e.target.value)}
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button onClick={handleSaveData}>Save</Button>
-            <div>
-              <Button variant="outline" onClick={()=>setShowDialog(!showDialog)}>Cancel</Button>
-            </div>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-      <Dialog open={showUploadDialog} onOpenChange={setShowUploadDialog}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Upload Student Data</DialogTitle>
-            <DialogDescription>Upload an XLSX file containing student data.</DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="file">Upload File</Label>
-              <Input id="file" type="file" accept=".xlsx" onChange={handleFileChange} />
-            </div>
-            <Button onClick={handleUploadSubmit}>Upload Student Data</Button>
-          </div>
-          <DialogFooter>
-            <div>
-              <Button variant="outline">Cancel</Button>
-            </div>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   )
 }
+
