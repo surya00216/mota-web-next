@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { Plus, Upload } from "lucide-react"
+import { Download, Plus, Upload } from "lucide-react"
 import Header from "@/app/dashboard/_components/header"
 
 export default function Component() {
@@ -36,9 +36,6 @@ export default function Component() {
     })
     setShowDialog(false)
   }
-  const handleFetchData = () => {
-    console.log("Fetching data")
-  }
   const handleUploadData = () => {
     setShowUploadDialog(true)
   }
@@ -59,9 +56,7 @@ export default function Component() {
               <CardHeader className="flex items-center flex-row justify-between">
                 <CardTitle className="text-3xl">Add Student</CardTitle>
                 <div className="flex justify-center items-center">
-                  <Button onClick={handleFetchData} className="mr-2" variant="outline">Fetch Data</Button>
-                  <Button onClick={handleUploadData} className="mr-2" variant="outline"><Upload className="w-4 h-4"/></Button>
-                  <Button onClick={handleCreateData} variant="outline"><Plus className="w-4 h-4"/></Button>
+                  <Button className="mr-2" variant="outline"><Download className="w-4 h-4"/>Download Template</Button>
                 </div>
               </CardHeader>
               <CardContent>
@@ -118,8 +113,11 @@ export default function Component() {
                       </SelectContent>
                     </Select>
                   </div>
-                  <Button className="w-full">Save</Button>
                 </form>
+                  <div className="flex my-4">
+                    <Button onClick={handleUploadData} variant="secondary" className="mr-1 w-full"><Upload className="w-4 h-4"/> Upload Bulk</Button>
+                    <Button onClick={handleCreateData} variant="secondary" className="ml-1 w-full"><Plus className="w-4 h-4"/> Add Student</Button>
+                  </div>
               </CardContent>
             </Card>
           </div>
@@ -130,12 +128,22 @@ export default function Component() {
               <DialogTitle>Add New Student</DialogTitle>
               <DialogDescription>Enter the student's details to create a new record.</DialogDescription>
             </DialogHeader>
-            <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-2 gap-4 py-4">
               <div className="space-y-2">
                 <Label htmlFor="rollNo">Roll No.</Label>
                 <Input
+                  required
                   id="rollNo"
                   placeholder="Enter roll number"
+                  value={rollNo}
+                  onChange={(e) => setRollNo(e.target.value)}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="rollNo">Department</Label>
+                <Input
+                  id="rollNo"
+                  placeholder="Enter Department Name"
                   value={rollNo}
                   onChange={(e) => setRollNo(e.target.value)}
                 />
