@@ -7,9 +7,16 @@ import Header from "../_components/header"
 import { useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuCheckboxItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { useState } from "react"
 
 export default function Component() {
   const router = useRouter()
+
+  const [department, setDepartment] = useState()
+  const [year, setYear] = useState()
+  const [academicYear, setAcademicYear] = useState()
+  const [graudation, setGraduation] = useState()
+
 
   return (
     <div className="flex flex-col">
@@ -56,6 +63,34 @@ export default function Component() {
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
+              <div className="ml-2">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="ml-auto">
+                      Academic Year <ChevronDownIcon className="ml-2 h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuCheckboxItem checked>First Year</DropdownMenuCheckboxItem>
+                    <DropdownMenuCheckboxItem checked>Second Year</DropdownMenuCheckboxItem>
+                    <DropdownMenuCheckboxItem checked>Third Year</DropdownMenuCheckboxItem>
+                    <DropdownMenuCheckboxItem checked>Fourth Year</DropdownMenuCheckboxItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              <div className="ml-2">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="ml-auto">
+                      Graduation <ChevronDownIcon className="ml-2 h-4 w-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuCheckboxItem checked>UG</DropdownMenuCheckboxItem>
+                    <DropdownMenuCheckboxItem checked>PG</DropdownMenuCheckboxItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
             </div>
           </div>
         </div>
@@ -92,222 +127,6 @@ export default function Component() {
                   <TableCell>Computer Science</TableCell>
                   <TableCell>2023-04-01 10:00 AM</TableCell>
                   <TableCell>2023-05-15 03:30 PM</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="icon">
-                        <FilePenIcon className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon">
-                        <TrashIcon className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>2</TableCell>
-                  <TableCell>Jane Smith</TableCell>
-                  <TableCell>jane@example.com</TableCell>
-                  <TableCell>987-654-3210</TableCell>
-                  <TableCell>
-                    <div className="flex items-center">
-                      <span className="mr-2">********</span>
-                      <Button variant="ghost" size="icon">
-                        <EyeIcon className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                  <TableCell>Sales</TableCell>
-                  <TableCell>2023-06-01 09:15 AM</TableCell>
-                  <TableCell>2023-07-10 11:45 AM</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="icon">
-                        <FilePenIcon className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon">
-                        <TrashIcon className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>3</TableCell>
-                  <TableCell>Michael Johnson</TableCell>
-                  <TableCell>michael@example.com</TableCell>
-                  <TableCell>555-123-4567</TableCell>
-                  <TableCell>
-                    <div className="flex items-center">
-                      <span className="mr-2">********</span>
-                      <Button variant="ghost" size="icon">
-                        <EyeIcon className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                  <TableCell>IT</TableCell>
-                  <TableCell>2023-08-01 02:00 PM</TableCell>
-                  <TableCell>2023-09-20 09:00 AM</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="icon">
-                        <FilePenIcon className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon">
-                        <TrashIcon className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>4</TableCell>
-                  <TableCell>Emily Davis</TableCell>
-                  <TableCell>emily@example.com</TableCell>
-                  <TableCell>111-222-3333</TableCell>
-                  <TableCell>
-                    <div className="flex items-center">
-                      <span className="mr-2">********</span>
-                      <Button variant="ghost" size="icon">
-                        <EyeIcon className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                  <TableCell>HR</TableCell>
-                  <TableCell>2023-10-01 11:30 AM</TableCell>
-                  <TableCell>2023-11-15 04:45 PM</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="icon">
-                        <FilePenIcon className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon">
-                        <TrashIcon className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>4</TableCell>
-                  <TableCell>Emily Davis</TableCell>
-                  <TableCell>emily@example.com</TableCell>
-                  <TableCell>111-222-3333</TableCell>
-                  <TableCell>
-                    <div className="flex items-center">
-                      <span className="mr-2">********</span>
-                      <Button variant="ghost" size="icon">
-                        <EyeIcon className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                  <TableCell>HR</TableCell>
-                  <TableCell>2023-10-01 11:30 AM</TableCell>
-                  <TableCell>2023-11-15 04:45 PM</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="icon">
-                        <FilePenIcon className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon">
-                        <TrashIcon className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>4</TableCell>
-                  <TableCell>Emily Davis</TableCell>
-                  <TableCell>emily@example.com</TableCell>
-                  <TableCell>111-222-3333</TableCell>
-                  <TableCell>
-                    <div className="flex items-center">
-                      <span className="mr-2">********</span>
-                      <Button variant="ghost" size="icon">
-                        <EyeIcon className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                  <TableCell>HR</TableCell>
-                  <TableCell>2023-10-01 11:30 AM</TableCell>
-                  <TableCell>2023-11-15 04:45 PM</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="icon">
-                        <FilePenIcon className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon">
-                        <TrashIcon className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>4</TableCell>
-                  <TableCell>Emily Davis</TableCell>
-                  <TableCell>emily@example.com</TableCell>
-                  <TableCell>111-222-3333</TableCell>
-                  <TableCell>
-                    <div className="flex items-center">
-                      <span className="mr-2">********</span>
-                      <Button variant="ghost" size="icon">
-                        <EyeIcon className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                  <TableCell>HR</TableCell>
-                  <TableCell>2023-10-01 11:30 AM</TableCell>
-                  <TableCell>2023-11-15 04:45 PM</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="icon">
-                        <FilePenIcon className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon">
-                        <TrashIcon className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>4</TableCell>
-                  <TableCell>Emily Davis</TableCell>
-                  <TableCell>emily@example.com</TableCell>
-                  <TableCell>111-222-3333</TableCell>
-                  <TableCell>
-                    <div className="flex items-center">
-                      <span className="mr-2">********</span>
-                      <Button variant="ghost" size="icon">
-                        <EyeIcon className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                  <TableCell>HR</TableCell>
-                  <TableCell>2023-10-01 11:30 AM</TableCell>
-                  <TableCell>2023-11-15 04:45 PM</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <Button variant="ghost" size="icon">
-                        <FilePenIcon className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon">
-                        <TrashIcon className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell>4</TableCell>
-                  <TableCell>Emily Davis</TableCell>
-                  <TableCell>emily@example.com</TableCell>
-                  <TableCell>111-222-3333</TableCell>
-                  <TableCell>
-                    <div className="flex items-center">
-                      <span className="mr-2">********</span>
-                      <Button variant="ghost" size="icon">
-                        <EyeIcon className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                  <TableCell>HR</TableCell>
-                  <TableCell>2023-10-01 11:30 AM</TableCell>
-                  <TableCell>2023-11-15 04:45 PM</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <Button variant="ghost" size="icon">
