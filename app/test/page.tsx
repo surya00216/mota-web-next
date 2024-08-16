@@ -27,7 +27,6 @@ const DataFetcher: React.FC = () => {
           'year',
           'FY',
           'students',
-          
         );
         const docRef = doc( // to get a particular doc
           firestore,
@@ -50,7 +49,6 @@ const DataFetcher: React.FC = () => {
 
         // const docSnap = await getDoc(docRef); //get a single doc value
         const querySnapshot = await getDocs(colRef); //get multiple doc
-
         const docsData = querySnapshot.docs.map(doc => ({
           id: doc.id, // Document ID
           ...doc.data() // Document data

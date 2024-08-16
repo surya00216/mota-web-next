@@ -85,6 +85,8 @@ export default function Component() {
                       <SelectContent>
                         <SelectItem value="2324">2023-24</SelectItem>
                         <SelectItem value="2425">2024-25</SelectItem>
+                        <SelectItem value="2425">2024-25</SelectItem>
+                        <SelectItem value="2425">2024-25</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

@@ -1,6 +1,5 @@
 "use client"
 import Link from "next/link"
-import Header from "./_components/header"
 import Sidebar from "./_components/sidebar"
 import { Mountain } from "lucide-react"
 

@@ -1,14 +1,15 @@
 "use client"
 
-import { ChangeEvent, MouseEvent, MouseEventHandler, useState } from "react"
+import axios from "axios"
+import { ChangeEvent, MouseEvent, useState } from "react"
 import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { X } from "lucide-react"
-import Header from "@/app/dashboard/_components/header"
+import toast from "react-hot-toast"
 
 export default function AddDepartment() {
   const [departmentName, setDepartmentName] = useState("")
@@ -18,6 +19,7 @@ export default function AddDepartment() {
   const [semester, setSemester] = useState(1)
   const [subjects, setSubjects] = useState<string[]>([])
   const [subject, setSubject] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSubject(event.target.value);
@@ -35,6 +37,32 @@ export default function AddDepartment() {
     setSubjects((prevItems:any) => prevItems.filter((_:any, index:number) => index !== indexToRemove));
   };
 
+  const onSubmit = async(e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true)
+    try {
+      const response = await axios({
+        method: 'post',
+        url: '/user/12345',
+        data: {
+          departmentName,
+          academicYear,
+          graduationType,
+          year,
+          semester,
+          subjects
+        }
+      });
+      toast.success('Department added successfully');
+      console.log(response)
+      setIsLoading(false)
+    } catch (error) {
+      console.log(error)
+      toast.error(`${error}`)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <div>
@@ -135,7 +163,11 @@ export default function AddDepartment() {
                   
                 </div>
                 <div className="flex justify-end">
-                  <Button className="w-full" type="submit">Save</Button>
+                  <Button 
+                    disabled={isLoading}
+                    onClick={onSubmit} 
+                    className="w-full" 
+                    type="submit">Save</Button>
                 </div> 
               </form>
             </CardContent>
