@@ -1,47 +1,49 @@
-'use client'
+"use client"
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { auth } from '@/lib/firebase';
-import { onAuthStateChanged, User } from 'firebase/auth';
+import { auth } from "@/lib/firebase";
+import {  onAuthStateChanged, User } from "firebase/auth";
+import { createContext, useContext, useEffect, useState } from "react";
 
-type AuthContextType = {
-  user: User | null;
-};
+interface AuthContextProps {
+  currentUser: User | null;
+  isLoggedIn: boolean
+  isLoading: boolean
+}
 
-const AuthContext = createContext<AuthContextType | null>(null);
+const AuthContext = createContext<AuthContextProps | undefined>(undefined)
 
-export const useAuth = () => useContext(AuthContext);
+export function AuthProvider({children}:{children:React.ReactNode}){
+  const [ currentUser, setCurrentUser ] = useState<User|null>(null)
+  const [ isLoggedIn, setIsLoggedIn ] = useState(false)
+  const [ isLoading, setIsLoading ] = useState(true)
 
-export const AuthProvider = ({ children }:{children:React.ReactNode}) => {
-  const [user, setUser] = useState<User|null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const router = useRouter();
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user || null);
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
-
-  // Define unprotected routes
-  const unprotectedRoutes = '/login';
-
-  useEffect(() => {
-    // Check if the route is protected
-    const pathIsProtected = !(unprotectedRoutes) ;
-    if (!loading && !user && pathIsProtected) {
-      // Redirect to the login page if the user is not authenticated
-      router.push('/login');
-    }
-  }, [user, loading, router]);
+  useEffect(()=>{
+    const unsubscribe = onAuthStateChanged(auth, (user)=>{
+      if(user){
+        setCurrentUser(user)
+        setIsLoggedIn(true)
+      }else{
+        setCurrentUser(null)
+        setIsLoggedIn(false)
+      }
+      setIsLoading(false)
+    })
+    return unsubscribe
+  },[])
+  
+  const value = {
+    currentUser,
+    isLoggedIn,
+    isLoading
+  }
 
   return (
-    <AuthContext.Provider value={{ user }}>
-      {loading ? <p>Loading...</p> : children}
+    <AuthContext.Provider value={value}>
+      {!isLoading && children}
     </AuthContext.Provider>
   );
-};
+}
+
+export function useAuth(){
+  return useContext(AuthContext)
+}

@@ -1,25 +1,41 @@
 "use client"
 
 import axios from "axios"
-import { ChangeEvent, MouseEvent, useState } from "react"
+import { ChangeEvent, MouseEvent, useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
-import { Input } from "@/components/ui/input"
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"
-import { Badge } from "@/components/ui/badge"
-import { X } from "lucide-react"
 import toast from "react-hot-toast"
+import InputBox from "./input-box"
+import AddSubjects from "./add-subjects"
+import { getCollection } from "@/lib/utils"
 
 export default function AddDepartment() {
-  const [departmentName, setDepartmentName] = useState("")
-  const [academicYear, setAcademicYear] = useState<number| string>()
+  const [departmentName, setDepartmentName] = useState<string>("")
+  const [academicYear, setAcademicYear] = useState<number|string>()
   const [graduationType, setGraduationType] = useState("UG")
   const [year, setYear] = useState("FY")
-  const [semester, setSemester] = useState(1)
+  const [semester, setSemester] = useState<string[]>(["Semester 1", "Semester 2"])
   const [subjects, setSubjects] = useState<string[]>([])
+
   const [subject, setSubject] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+
+  const yearOption = (year:string) => {
+    if(year==="FY"){
+      setSemester(["Semester 1", "Semester 2"])
+    }
+    if(year==="SY"){
+      setSemester(["Semester 3", "Semester 4"])
+    }
+    if(year==="TY"){
+      setSemester(["Semester 5", "Semester 6"])
+    }
+    if(year==="FTY"){
+      setSemester(["Semester 7", "Semester 8"])
+    }
+  }
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>) => {
     setSubject(event.target.value);
@@ -33,6 +49,7 @@ export default function AddDepartment() {
     };
     console.log(subjects)
   }
+  
   const handleRemoveClick = (indexToRemove: number) => {
     setSubjects((prevItems:any) => prevItems.filter((_:any, index:number) => index !== indexToRemove));
   };
@@ -41,18 +58,26 @@ export default function AddDepartment() {
     e.preventDefault();
     setIsLoading(true)
     try {
-      const response = await axios({
-        method: 'post',
-        url: '/user/12345',
-        data: {
-          departmentName,
-          academicYear,
-          graduationType,
-          year,
-          semester,
-          subjects
-        }
-      });
+      // const response = await axios({
+      //   method: 'post',
+      //   url: '/user/12345',
+      //   data: {
+      //     departmentName,
+      //     academicYear,
+      //     graduationType,
+      //     year,
+      //     semester,
+      //     subjects
+      //   }
+      // });
+      const response = {
+        departmentName,
+        academicYear,
+        graduationType,
+        year,
+        semester,
+        subjects,
+      }
       toast.success('Department added successfully');
       console.log(response)
       setIsLoading(false)
@@ -64,30 +89,27 @@ export default function AddDepartment() {
     }
   }
 
+
+
   return (
     <div>
       <div className="flex flex-col">
         <main className="flex-1 mt-6">
           <Card className="border-none outline-none shadow-none">
-            {/* <CardHeader>
-              <CardTitle className="text-2xl">Add Department</CardTitle>
-            </CardHeader> */}
             <CardContent>
               <form className="grid gap-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="departmentName">Department Name</Label>
-                    <Input
-                      id="departmentName"
+                    <InputBox
+                      label="Department Name"
                       placeholder="Computer Science"
                       value={departmentName}
                       onChange={(e) => setDepartmentName(e.target.value)}
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="academicYear">Academic Year</Label>
-                    <Input
-                      id="academicYear"
+                    <InputBox
+                      label="Academic Year"
                       type="number" 
                       placeholder='e.g. 2324 for 2023-2024'
                       value={academicYear}
@@ -98,7 +120,7 @@ export default function AddDepartment() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="graduationType">Graduation Type</Label>
-                    <Select value={graduationType} onValueChange={setGraduationType}>
+                    <Select value={graduationType} onValueChange={(value)=>setGraduationType(value)}>
                       <SelectTrigger>
                         <SelectValue placeholder="Select graduation type" />
                       </SelectTrigger>
@@ -110,7 +132,10 @@ export default function AddDepartment() {
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="year">Year</Label>
-                    <Select value={year} onValueChange={setYear}>
+                    <Select value={year} onValueChange={(value)=>{
+                      setYear(value);
+                      yearOption(value)
+                    }}>
                       <SelectTrigger>
                         <SelectValue placeholder="Select year" />
                       </SelectTrigger>
@@ -125,42 +150,25 @@ export default function AddDepartment() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="semester">Semester</Label>
-                  <Select
-                    value={semester.toString()}
-                    onValueChange={(value) => setSemester(parseInt(value))}
-                  >
+                  <Select>
                     <SelectTrigger>
                       <SelectValue placeholder="Select semester" />
                     </SelectTrigger>
                     <SelectContent>
-                      {Array.from({ length: 8 }, (_, i) => (
-                        <SelectItem key={i} value={`${i + 1}`}>
-                          Semester {i + 1}
-                        </SelectItem>
+                      {semester.map((data,index)=>(
+                        <SelectItem key={index} value={data}>{data}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="subjects">Subjects</Label>
-                  <div className="flex flex-wrap gap-2">
-                    <Input
-                      className="flex-1"
-                      placeholder='e.g. "Python"'
-                      onChange={handleInputChange}
-                      value={subject}
-                    />
-                    <Button onClick={handleAddSubject} className="w-18">Add</Button>
-                  </div>
-                  <div className="">
-                    {subjects.map((subject, index)=>(
-                      <Badge className="p-2 my-1 mr-2">
-                        {subject}     
-                        <X onClick={()=>handleRemoveClick(index)} className="w-4 h-4 ml-2 hover:text-slate-900 text-slate-500"/>
-                      </Badge>
-                    ))}
-                  </div>
-                  
+                  <AddSubjects
+                    handleAddSubject={handleAddSubject}
+                    handleInputChange={handleInputChange}
+                    handleRemoveClick={handleRemoveClick}
+                    subjects={subjects}
+                    value={subject}
+                  />
                 </div>
                 <div className="flex justify-end">
                   <Button 

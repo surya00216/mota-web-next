@@ -13,8 +13,26 @@ import { getAuth } from "firebase/auth"
 //   measurementId: process.env.NEXT_PUBLIC_MEASUREMENT_ID
 // };
 
-const firebaseConfig = {
+// const firebaseConfig = {
+//   apiKey: "AIzaSyCMBUO0wJBWg0XjW06Vs90KyXBVXzIZXvs",
+//   authDomain: "mota-318ad.firebaseapp.com",
+//   databaseURL: "https://mota-318ad-default-rtdb.firebaseio.com",
+//   projectId: "mota-318ad",
+//   storageBucket: "mota-318ad.appspot.com",
+//   messagingSenderId: "485568541914",
+//   appId: "1:485568541914:web:90b45a3c444002a58061e3",
+//   measurementId: "G-7D6RC7D31N"
+// };
 
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyCIGWPqOo2uq0Ps4Rcx6EgnDejJoBhQGdY",
+  authDomain: "test-504c5.firebaseapp.com",
+  projectId: "test-504c5",
+  storageBucket: "test-504c5.appspot.com",
+  messagingSenderId: "839506147195",
+  appId: "1:839506147195:web:6175fc4cbbba70b99b6fde",
+  measurementId: "G-VNRCGB346L"
 };
 
 const app = initializeApp(firebaseConfig);

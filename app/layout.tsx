@@ -17,11 +17,10 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-
   return (
     <html lang="en">
       <body className={inter.className}>
-        <AuthProvider>
+        {/* <AuthProvider> */}
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -31,7 +30,7 @@ export default function RootLayout({
               {children} 
             <Toaster/> 
           </ThemeProvider>
-        </AuthProvider>
+        {/* </AuthProvider> */}
       </body>
     </html>
   );

@@ -1,9 +1,10 @@
 "use client"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table"
 import { ChevronDownIcon, EyeIcon, FilePenIcon, TrashIcon } from "lucide-react"
-import Header from "../_components/header"
+import Header from "../../../components/header"
 import { useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuCheckboxItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
@@ -17,6 +18,10 @@ export default function Component() {
   const [academicYear, setAcademicYear] = useState()
   const [graudation, setGraduation] = useState()
 
+  const [hidden, setHiddent] = useState<boolean>(true)
+  const toggleHidden = () => {
+    setHiddent(!hidden)
+  }
 
   return (
     <div className="flex flex-col">
@@ -118,8 +123,15 @@ export default function Component() {
                   <TableCell>123-456-7890</TableCell>
                   <TableCell>
                     <div className="flex items-center">
-                      <span className="mr-2">********</span>
-                      <Button variant="ghost" size="icon">
+                      <span className="">
+                        <Input 
+                          className="w-32 focus:outline-none outline-none border-none"
+                          type={hidden ? "password" : "text"}
+                          value={"Password"}
+                          readOnly  
+                        />
+                      </span>
+                      <Button onClick={toggleHidden} variant="ghost" size="icon">
                         <EyeIcon className="h-4 w-4" />
                       </Button>
                     </div>
