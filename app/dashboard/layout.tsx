@@ -1,9 +1,19 @@
 "use client"
 import Link from "next/link"
-import Sidebar from "./_components/sidebar"
+import Sidebar from "../../components/sidebar"
 import { Mountain } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useAuth } from "../providers/auth-provider"
 
 const DashboardLayout = ({children}:{children:React.ReactNode}) => {
+  // const router = useRouter()
+  // const user = useAuth()
+  // if (!user?.isLoggedIn){
+  //   router.push("/login")
+  // }
+  // if (!user?.isLoggedIn){
+  //   return null
+  // }
   return (
     <div className="grid min-h-screen w-full grid-cols-[240px_1fr]">
       <div className="flex flex-col border-r bg-muted/40">

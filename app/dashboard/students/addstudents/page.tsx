@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
@@ -8,33 +8,50 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Download, Plus, Upload } from "lucide-react"
-import Header from "@/app/dashboard/_components/header"
+import DropDown from "@/components/dropdown"
+import Header from "@/components/header"
+import InputBox from "@/components/input-box"
+import AddStudentDialog from "@/components/add-student-dialog"
+import { capitalizeStr, getAcademicYear, getCollection, getYear, saveStudent } from "@/lib/utils"
+import toast from "react-hot-toast"
 
 export default function Component() {
-  const [departmentName, setDepartmentName] = useState("")
-  const [academicYear, setAcademicYear] = useState(0)
+  const [departmentName, setDepartmentName] = useState<string[] | undefined>([])
+  const [selectedDepartmentName, setSelectedDepartmentName] = useState("")
+
+  const [academicYear, setAcademicYear] = useState<string[] | undefined>([])
+  const [selectedAcademicYear, setSelectedAcademicYear] = useState("")
+
   const [graduationType, setGraduationType] = useState("UG")
-  const [year, setYear] = useState("FY")
-  const [showDialog, setShowDialog] = useState(false)
-  const [showUploadDialog, setShowUploadDialog] = useState(false)
+ 
+  const [year, setYear] = useState<string[] | undefined>([])
+  const [selectedYear, setSelectedYear] = useState("FY")
+
   const [rollNo, setRollNo] = useState("")
   const [name, setName] = useState("")
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [mobileNo, setMobileNo] = useState("")
+  const [showStudentDialog, setShowStudentDialog] = useState(false)
+  const [showUploadDialog, setShowUploadDialog] = useState(false)
   const [file, setFile] = useState(null)
+  const [loading, setLoading] = useState<boolean>(false)
+
   const handleCreateData = () => {
-    setShowDialog(true)
+    setShowStudentDialog(true)
   }
-  const handleSaveData = () => {
-    console.log("Saving student data:", {
-      rollNo,
-      name,
-      email,
-      password,
-      mobileNo,
-    })
-    setShowDialog(false)
+  const handleSaveData = async() => {
+    setLoading(true)
+    try {
+      await saveStudent(selectedDepartmentName,email, parseInt(mobileNo), name, password, selectedAcademicYear, graduationType, selectedYear, rollNo.toUpperCase())
+      toast.success("Student Added Successfully",{position:"top-center"})
+      setLoading(false)
+      setShowStudentDialog(false)
+    } catch (error) {
+      toast.error("Error while adding student", {position:"top-center"})
+      setLoading(false)
+      setShowStudentDialog(false)
+    }
   }
   const handleUploadData = () => {
     setShowUploadDialog(true)
@@ -46,7 +63,44 @@ export default function Component() {
     console.log("Uploading file:", file)
     setShowUploadDialog(false)
   }
+
+  //useEffect(()=>{},[])
+
+  useEffect(()=>{
+    const fetchData = async() => {
+      const res = await getCollection('departments') 
+      const newArray = res?.map((data) => capitalizeStr(data.id))
+      setDepartmentName(newArray) 
+    }
+    fetchData()
+  },[])
+
+  useEffect(()=>{
+    const fetchData = async() => {
+      if(selectedDepartmentName.length !== 0){
+        const res = await getAcademicYear(selectedDepartmentName) 
+        console.log(res)
+        const newArray = res?.map((data) => data.id)
+        setAcademicYear(newArray)
+      }
+    }
+    fetchData()
+  },[selectedDepartmentName])
+
+  useEffect(()=>{
+    const fetchData = async() => {
+      if(selectedDepartmentName.length !== 0 && selectedAcademicYear.length !== 0 && graduationType.length !== 0){
+        console.log(selectedDepartmentName, selectedAcademicYear, graduationType)
+        const res = await getYear(selectedDepartmentName , selectedAcademicYear, graduationType) 
+        const newArray = res?.map((data) => data.id)
+        setYear(newArray)
+      }
+    }
+    fetchData()
+  },[selectedDepartmentName, selectedAcademicYear, graduationType])
+
   return (
+    // form validation required
     <div className="">
       <Header title="Students"/>
       <div className="flex  flex-col">
@@ -56,65 +110,43 @@ export default function Component() {
               <CardHeader className="flex items-center flex-row justify-between">
                 <CardTitle className="text-3xl">Add Student</CardTitle>
                 <div className="flex justify-center items-center">
-                  <Button className="mr-2" variant="outline"><Download className="w-4 h-4"/>Download Template</Button>
+                  <Button className="mr-2" variant="outline"><Download className="w-4 h-4 mr-2"/>Download Template</Button>
                 </div>
               </CardHeader>
               <CardContent>
                 <form className="grid gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="departmentName">Department Name</Label>
-                    <Select value={departmentName} onValueChange={setDepartmentName}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select department" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="computer-science">Computer Science</SelectItem>
-                        <SelectItem value="data-science">Data Science</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="academicYear">Academic Year</Label>
-                    <Select
-                      value={academicYear.toString()}
-                      onValueChange={(value) => setAcademicYear(parseInt(value))}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select academic year" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="2324">2023-24</SelectItem>
-                        <SelectItem value="2425">2024-25</SelectItem>
-                        <SelectItem value="2425">2024-25</SelectItem>
-                        <SelectItem value="2425">2024-25</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="year">Year</Label>
-                    <Select value={year} onValueChange={setYear}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select year" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="FY">FY</SelectItem>
-                        <SelectItem value="SY">SY</SelectItem>
-                        <SelectItem value="TY">TY</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="graduationType">Graduation Type</Label>
-                    <Select value={graduationType} onValueChange={setGraduationType}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select graduation type" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="UG">UG</SelectItem>
-                        <SelectItem value="PG">PG</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
+                    <DropDown
+                      label="Department Name"
+                      value={selectedDepartmentName}
+                      onValueChange={(value)=>{setSelectedDepartmentName(value)}}
+                      option={departmentName!}
+                      placeholder="Select Department"
+                    />
+
+                    <DropDown
+                      label="Academic Year"
+                      onValueChange={(value) => setSelectedAcademicYear(value)}
+                      value={selectedAcademicYear}
+                      option={academicYear!}
+                      placeholder="Select academic year"
+                    />
+
+                    <DropDown
+                      label="Graduation Type"
+                      onValueChange={(value) => setGraduationType(value)}
+                      placeholder="Select graduation type"
+                      value={graduationType}
+                      option={["UG","PG"]}
+                    />
+
+                    <DropDown
+                      label="Year"
+                      onValueChange={(value) => setSelectedYear(value)}
+                      value={selectedYear}
+                      placeholder="Select Year"
+                      option={year!}
+                    />
+
                 </form>
                   <div className="flex my-4">
                     <Button onClick={handleUploadData} variant="secondary" className="mr-1 w-full"><Upload className="w-4 h-4"/> Upload Bulk</Button>
@@ -124,73 +156,27 @@ export default function Component() {
             </Card>
           </div>
         </main>
-        <Dialog open={showDialog} onOpenChange={setShowDialog}>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>Add New Student</DialogTitle>
-              <DialogDescription>Enter the student's details to create a new record.</DialogDescription>
-            </DialogHeader>
-            <div className="grid grid-cols-2 gap-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="rollNo">Roll No.</Label>
-                <Input
-                  required
-                  id="rollNo"
-                  placeholder="Enter roll number"
-                  value={rollNo}
-                  onChange={(e) => setRollNo(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="rollNo">Department</Label>
-                <Input
-                  id="rollNo"
-                  placeholder="Enter Department Name"
-                  value={rollNo}
-                  onChange={(e) => setRollNo(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
-                <Input id="name" placeholder="Enter name" value={name} onChange={(e) => setName(e.target.value)} />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="Enter email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  placeholder="Enter password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="mobileNo">Mobile No.</Label>
-                <Input
-                  id="mobileNo"
-                  placeholder="Enter mobile number"
-                  value={mobileNo}
-                  onChange={(e) => setMobileNo(e.target.value)}
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button onClick={handleSaveData}>Save</Button>
-              <div>
-                <Button variant="outline" onClick={()=>setShowDialog(!showDialog)}>Cancel</Button>
-              </div>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+        {/* validation required for add student dialog */}
+        <AddStudentDialog
+          open={showStudentDialog}
+          onOpenChange={setShowStudentDialog}
+          setRollNo={setRollNo}
+          setSelectedDepartmentName={setSelectedDepartmentName}
+          setName={setName}
+          setEmail={setEmail}
+          setPassword={setPassword}
+          setMobileNo={setMobileNo}
+          handleClose={()=>setShowStudentDialog(false)}
+          handleSaveData={handleSaveData}
+          rollNo={rollNo}
+          selectedDepartmentName={selectedDepartmentName}
+          name={name}
+          email={email}
+          password={password}
+          mobileNo={mobileNo}
+          loading={loading}
+        />
+
         <Dialog open={showUploadDialog} onOpenChange={setShowUploadDialog}>
           <DialogContent className="sm:max-w-md">
             <DialogHeader>

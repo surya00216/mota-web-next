@@ -1,10 +1,9 @@
 "use client"
 import React, { useState } from 'react'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import Component from './_components/add-department'
-import Header from '../_components/header'
-import AddDepartment from './_components/add-department'
-import ViewDepartment from './_components/view-department'
+import Header from '@/components/header'
+import AddDepartment from '@/components/add-department'
+import ViewDepartment from '@/components/view-department'
 
 const page = () => {
   const [option, setOption] = useState<string>("add")

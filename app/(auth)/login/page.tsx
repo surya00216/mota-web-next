@@ -14,17 +14,20 @@ import { Label } from "@/components/ui/label"
 import { auth } from "@/lib/firebase";
 import { useState } from "react";
 import { signInWithEmailAndPassword } from 'firebase/auth';
-
 import { EyeNoneIcon, EyeOpenIcon } from "@radix-ui/react-icons";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import { LoaderIcon } from "lucide-react"
 
 
 export function LoginForm() {
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
   const [error, setError] = useState();
   const [loading, setLoading] = useState(false);
+
   const [hidden, setHidden] = useState(true)
   const router = useRouter()
 
@@ -32,13 +35,14 @@ export function LoginForm() {
     e.preventDefault();
     setLoading(true)
     try {
+      await new Promise((resolve) => setTimeout(resolve, 2000)); // Remove this afterwards
       await signInWithEmailAndPassword(auth, email, password);
       toast.success("Login Successfull",{position:"top-center"})
       router.push('/dashboard/department')
     } catch (error:any) {
+      setLoading(false)
       toast.error(`${error.message}`)
       setError(error.message);
-      setLoading(false)
     }
   };
 
@@ -69,7 +73,9 @@ export function LoginForm() {
           {error && <div className="text-red-500">Invalid email id or password</div> }
           </CardContent>
           <CardFooter>
-            <Button type="submit" className="w-full" disabled={loading}>Sign in</Button>
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? <LoaderIcon className="h-4 w-4 animate-spin"/> : "Sign in"}
+            </Button>
           </CardFooter>
         </Card>
       </form>
